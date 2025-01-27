@@ -281,9 +281,12 @@ class UIManager {
                 if (!translation) {
                     throw new Error('翻译结果为空');
                 }
+                // 处理换行并设置为 pre-wrap 格式
+                this.translatedContent.style.whiteSpace = 'pre-wrap';
                 this.translatedContent.textContent = translation.trim();
             } catch (error) {
                 console.error('翻译失败:', error);
+                this.translatedContent.style.whiteSpace = 'pre-wrap';
                 this.translatedContent.textContent = '翻译失败: ' + (error.message || '未知错误');
                 // 如果是 API 配额超限，给出更明确的提示
                 if (error.message && error.message.includes('quota')) {
@@ -292,6 +295,7 @@ class UIManager {
             }
         } catch (error) {
             console.error('处理翻译请求失败:', error);
+            this.translatedContent.style.whiteSpace = 'pre-wrap';
             this.translatedContent.textContent = '处理翻译请求失败: ' + (error.message || '未知错误');
         }
     }
@@ -362,9 +366,11 @@ class UIManager {
             // 如果文本太长，截取前10000个字符
             const truncatedText = text.length > 10000 ? text.slice(0, 10000) + '...' : text;
             const summary = await KimiAPI.callKimiAPI(config.SUMMARIZE_PROMPT, truncatedText);
+            this.summaryContent.style.whiteSpace = 'pre-wrap';
             this.summaryContent.textContent = summary;
         } catch (error) {
             console.error('生成摘要失败:', error);
+            this.summaryContent.style.whiteSpace = 'pre-wrap';
             this.summaryContent.textContent = '生成摘要失败: ' + error.message;
         }
     }

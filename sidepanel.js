@@ -126,6 +126,16 @@ class UIManager {
         this.apiKeyInput = document.getElementById('apiKey');
         this.saveSettingsBtn = document.getElementById('saveSettings');
         this.closeSettingsBtn = document.getElementById('closeSettings');
+
+        // 设置文本区域的样式
+        if (this.originalContent) {
+            this.originalContent.style.whiteSpace = 'pre-wrap';
+            this.originalContent.style.wordBreak = 'break-word';
+        }
+        if (this.pageContent) {
+            this.pageContent.style.whiteSpace = 'pre-wrap';
+            this.pageContent.style.wordBreak = 'break-word';
+        }
     }
 
     initializeEventListeners() {
@@ -220,9 +230,17 @@ class UIManager {
                     if (response && response.selectedText) {
                         const selectedText = response.selectedText.trim();
                         if (selectedText) {
+                            // 格式化选中的文本
+                            const formattedText = selectedText
+                                .replace(/\n{3,}/g, '\n\n') // 将多个连续换行替换为两个换行
+                                .split('\n')
+                                .map(line => line.trim()) // 去除每行首尾空白
+                                .filter(line => line) // 移除空行
+                                .join('\n\n'); // 用两个换行符连接所有行
+                            
                             // 只有当内容不同时才更新，避免光标跳动
-                            if (this.originalContent.value !== selectedText) {
-                                this.originalContent.value = selectedText;
+                            if (this.originalContent.value !== formattedText) {
+                                this.originalContent.value = formattedText;
                             }
                         }
                     }
@@ -249,9 +267,17 @@ class UIManager {
                 return;
             }
 
+            // 格式化要翻译的文本
+            const formattedText = text
+                .replace(/\n{3,}/g, '\n\n') // 将多个连续换行替换为两个换行
+                .split('\n')
+                .map(line => line.trim()) // 去除每行首尾空白
+                .filter(line => line) // 移除空行
+                .join('\n\n'); // 用两个换行符连接所有行
+
             // 如果有新的选中文本，更新输入框
             if (response && response.text) {
-                this.originalContent.value = text;
+                this.originalContent.value = formattedText;
             }
 
             const sourceLang = this.sourceLang.value;
@@ -277,7 +303,7 @@ class UIManager {
                     prompt = `请将以下文本翻译成${targetLang === 'zh' ? '中文' : '英文'}：\n\n`;
                 }
 
-                const translation = await KimiAPI.callKimiAPI(prompt, text);
+                const translation = await KimiAPI.callKimiAPI(prompt, formattedText);
                 if (!translation) {
                     throw new Error('翻译结果为空');
                 }
@@ -341,10 +367,21 @@ class UIManager {
 
                 if (result && result.result) {
                     const pageContent = result.result.trim();
-                    // 显示页面内容
-                    this.pageContent.textContent = pageContent;
+                    // 格式化页面内容，保持段落换行
+                    const formattedContent = pageContent
+                        .replace(/\n{3,}/g, '\n\n') // 将多个连续换行替换为两个换行
+                        .split('\n')
+                        .map(line => line.trim()) // 去除每行首尾空白
+                        .filter(line => line) // 移除空行
+                        .join('\n\n'); // 用两个换行符连接所有行
+                    
+                    // 显示格式化后的页面内容
+                    this.pageContent.style.whiteSpace = 'pre-wrap';
+                    this.pageContent.style.wordBreak = 'break-word';
+                    this.pageContent.textContent = formattedContent;
+                    
                     // 生成摘要
-                    await this.handleSummary(pageContent);
+                    await this.handleSummary(formattedContent);
                 } else {
                     throw new Error('无法获取页面内容');
                 }

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Kimi Helper</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Kimi Helper</h1>
+            <button id="settingsBtn" class="settings-btn" title="设置">⚙️</button>
+        </header>
+        
+        <!-- 设置对话框 -->
+        <div id="settingsDialog" class="settings-dialog hidden">
+            <div class="settings-content">
+                <h2>设置</h2>
+                <div class="settings-item">
+                    <label for="apiKey">Kimi API 密钥:</label>
+                    <input type="password" id="apiKey" placeholder="请输入 API 密钥">
+                </div>
+                <div class="button-group">
+                    <button id="saveSettings" class="action-btn">保存</button>
+                    <button id="closeSettings" class="action-btn secondary">取消</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="mode-switcher">
+            <button id="translateBtn" class="mode-btn active">翻译模式</button>
+            <button id="summarizeBtn" class="mode-btn">总结模式</button>
+        </div>
+
+        <main class="content-area">
+            <div id="translatePanel" class="panel active">
+                <div class="language-selector">
+                    <select id="sourceLang" class="lang-select">
+                        <option value="auto">自动检测</option>
+                        <option value="zh">中文</option>
+                        <option value="en">英文</option>
+                    </select>
+                    <span class="arrow">→</span>
+                    <select id="targetLang" class="lang-select">
+                        <option value="zh">中文</option>
+                        <option value="en">英文</option>
+                    </select>
+                </div>
+                <div class="original-text">
+                    <h3>原文</h3>
+                    <textarea id="originalContent" class="text-content" placeholder="请输入要翻译的文本，或从网页选择文本"></textarea>
+                </div>
+                <button id="translateButton" class="action-btn">翻译</button>
+                <div class="translated-text">
+                    <h3>译文</h3>
+                    <div id="translatedContent" class="text-content"></div>
+                </div>
+                <div class="button-group">
+                    <button id="copyTranslation" class="action-btn">复制译文</button>
+                    <button id="clearTranslation" class="action-btn">清空</button>
+                </div>
+            </div>
+
+            <div id="summarizePanel" class="panel">
+                <div class="page-content">
+                    <h3>页面内容</h3>
+                    <div id="pageContent" class="text-content"></div>
+                </div>
+                <button id="summarizeButton" class="action-btn">生成摘要</button>
+                <div id="summaryContent" class="text-content"></div>
+                <div id="loadingIndicator" class="loading hidden">
+                    <span class="spinner"></span>
+                    <p>正在生成摘要...</p>
+                </div>
+                <button id="copySummary" class="action-btn">复制摘要</button>
+            </div>
+        </main>
+
+        <footer>
+            <p>Powered by Kimi</p>
+        </footer>
+    </div>
+    <script src="config.js"></script>
+    <script src="sidepanel.js"></script>
+</body>
+</html> 

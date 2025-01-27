@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "Kimi Translator & Summarizer",
+  "version": "1.0",
+  "description": "A Chrome extension for translation and summarization using Kimi API",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "sidePanel",
+    "tabs"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "action": {
+    "default_title": "Kimi Helper"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ]
+} 
